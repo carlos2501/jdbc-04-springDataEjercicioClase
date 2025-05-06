@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Página de Saludo</title>
+</head>
+<body>
+<!-- Utiliza th:text para mostrar el valor del atributo 'titulo' pasado desde el controlador -->
+<h1 th:text="${titulo}">Texto de reemplazo si el título no se encuentra</h1>
+</body>
+</html>
