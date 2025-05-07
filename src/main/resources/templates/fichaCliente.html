@@ -62,8 +62,14 @@
 				<input type="text" class="form-control" id="codigo_postal" th:field="*{codigo_postal}" placeholder="Código Postal">
 			</div>
 			<div class="col-md-6">
-				<label for="codigo_rep_ventas" class="form-label">Código Empleado Rep Ventas</label>
-				<input type="number" class="form-control" id="codigo_rep_ventas" th:field="*{codigo_rep_ventas}" placeholder="Código Empleado Rep Ventas">
+				<label for="codigo_rep_ventas" class="form-label">Representante de Ventas</label>
+				<select name="codigo_rep_ventas" id="codigo_rep_ventas" class="form-select">
+					<option th:each="rep : ${listaRepresentantes}"
+					        th:value="${rep.getCodigo_empleado()}"
+					        th:text="${rep.nombreYApellido()}"
+							th:selected="${rep.getCodigo_empleado() == cliente.getCodigo_rep_ventas()}">
+					</option>
+				</select>
 			</div>
 			<div class="col-md-6">
 				<label for="limite_credito" class="form-label">Límite Crédito</label>
