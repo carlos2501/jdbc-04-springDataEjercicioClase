@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,10 +51,16 @@ public class EmpleadoController {
         // Obtener jefe del empleado
         Empleado jefe = null;
         if (empleado.getCodigoJefe() != null) {
-            Optional<Empleado> jefeOpt = empleadoSrvc.buscarEmpleadoPorId(Integer.valueOf(empleado.getCodigoJefe()));
+            Optional<Empleado> jefeOpt = empleadoSrvc.buscarEmpleadoPorId(empleado.getCodigoJefe());
             if (jefeOpt.isPresent()) {
                 jefe = jefeOpt.get();
             }
+        }
+
+        // Si el jefe no pertenece a la oficina del empleado...
+        if(jefe.getCodigoOficina() != empleado.getCodigoOficina()) {
+            // debo añadir su nombre a la lista de empleados para que aparezca como seleccionado
+            empleadosOficina.add(jefe);
         }
 
         model.addAttribute("empleado", empleado);
@@ -64,23 +72,28 @@ public class EmpleadoController {
         return "fichaEmpleado";
     }
 
-    /*@PostMapping("/empleados/{id}/actualizar")
+    @PostMapping("/empleados/{id}/actualizar")
     public String actualizarEmpleado(@PathVariable Integer id,
                                      @RequestParam String codigoOficina,
                                      @RequestParam(required = false) Integer codigoJefe) {
+        // Obtenemos el empleado
         Optional<Empleado> empleadoOpt = empleadoSrvc.buscarEmpleadoPorId(id);
         if (empleadoOpt.isEmpty()) {
             return "error";
         }
         Empleado empleado = empleadoOpt.get();
+        // Actualizamos con el nuevo código de oficina. Si no ha cambiado, se dejará el que tenía
         empleado.setCodigoOficina(codigoOficina);
+        // Actualizamos el código del jefe. Si no ha cambiado se deja el que tenía.
         if (codigoJefe != null) {
-            empleado.setCodigoJefe(String.valueOf(codigoJefe));
+            empleado.setCodigoJefe(codigoJefe);
         } else {
             empleado.setCodigoJefe(null);
         }
+        // se guarda en la BBDD
         empleadoSrvc.guardarEmpleado(empleado);
+        // Se recarga la ficha del empleado
         return "redirect:/empleados/" + id;
-    }*/
+    }
 }
 
